@@ -11,95 +11,96 @@
 
 :::danger[Security]
  
-Some of the concepts reviewed here utilize models to generate queries (e.g., for SQL or graph databases).
-There are inherent risks in doing this. 
-Make sure that your database connection permissions are scoped as narrowly as possible for your application's needs. 
-This will mitigate, though not eliminate, the risks of building a model-driven system capable of querying databases. 
-For more on general security best practices, see our [security guide](/docs/security/).
+ここで取り上げた概念の中には、モデルを使用してクエリ（例：SQLやグラフデータベース用）を生成するものがあります。  
+これには固有のリスクが伴います。  
+アプリケーションのニーズに応じて、データベース接続の権限範囲を可能な限り狭く設定してください。  
+これにより、データベースをクエリできるモデル駆動型システムを構築する際のリスクを軽減できますが、完全に排除することはできません。  
+一般的なセキュリティのベストプラクティスについては、[セキュリティガイド](/docs/security)をご覧ください。
 
 :::
 
-## Overview 
+## 概要
 
-Retrieval systems are fundamental to many AI applications, efficiently identifying relevant information from large datasets. 
-These systems accommodate various data formats:
+検索システムは、多くのAIアプリケーションにとって基本的な要素であり、大規模なデータセットから関連情報を効率的に特定します。
+これらのシステムは、さまざまなデータ形式に対応しています：
 
-- Unstructured text (e.g., documents) is often stored in vector stores or lexical search indexes.
-- Structured data is typically housed in relational or graph databases with defined schemas.
+- 非構造化テキスト（例：ドキュメント）は、ベクトルストアやレキシカル検索インデックスに格納されることが多いです。
+- 構造化データは、通常、スキーマが定義されたリレーショナルデータベースやグラフデータベースに格納されます。
 
-Despite the growing diversity in data formats, modern AI applications increasingly aim to make all types of data accessible through natural language interfaces. 
-Models play a crucial role in this process by translating natural language queries into formats compatible with the underlying search index or database. 
-This translation enables more intuitive and flexible interactions with complex data structures.
+データ形式が多様化しているにもかかわらず、現代のAIアプリケーションは、すべての種類のデータを自然言語インターフェースを通じて利用可能にすることをますます目指しています。  
+このプロセスで、モデルは自然言語クエリを基盤となる検索インデックスやデータベースに対応する形式に変換する重要な役割を果たします。  
+この変換により、複雑なデータ構造との直感的で柔軟な対話が可能になります。
 
-## Key concepts 
+## 重要な概念
 
-![Retrieval](/img/retrieval_concept.png)
+![Retrieval](/static/img/retrieval_concept.png)
 
-(1) **Query analysis**: A process where models transform or construct search queries to optimize retrieval.
+(1) **Query analysis**: モデルが検索クエリを変換または構築し、検索効率を最適化するプロセス。
 
-(2) **Information retrieval**: Search queries are used to fetch information from various retrieval systems.
+(2) **Information retrieval**: 検索クエリを使用して、さまざまな検索システムから情報を取得するプロセス。
 
 ## Query analysis 
 
-While users typically prefer to interact with retrieval systems using natural language, these systems may require specific query syntax or benefit from certain keywords. 
-Query analysis serves as a bridge between raw user input and optimized search queries. Some common applications of query analysis include:
+ユーザーは通常、自然言語を使用して検索システムと対話することを好みますが、これらのシステムは特定のクエリ構文を必要とする場合や、特定のキーワードを活用することで効果が向上する場合があります。  
+クエリ分析は、生のユーザー入力と最適化された検索クエリの間の橋渡しをします。  
+クエリ分析の一般的な応用例には以下があります：
 
-1. **Query Re-writing**: Queries can be re-written or expanded to improve semantic or lexical searches.
-2. **Query Construction**: Search indexes may require structured queries (e.g., SQL for databases).
+1. **Query Re-writing**: クエリを再構築または拡張して、セマンティックまたはレキシカル検索を改善します。
+2. **Query Construction**: 検索インデックスは構造化クエリを必要とする場合があります（例：データベース用のSQL）。
 
-Query analysis employs models to transform or construct optimized search queries from raw user input. 
+クエリ分析は、モデルを使用して生のユーザー入力から最適化された検索クエリを変換または構築するために使用されます。
 
 ### Query re-writing
 
-Retrieval systems should ideally handle a wide spectrum of user inputs, from simple and poorly worded queries to complex, multi-faceted questions. 
-To achieve this versatility, a popular approach is to use models to transform raw user queries into more effective search queries. 
-This transformation can range from simple keyword extraction to sophisticated query expansion and reformulation.
-Here are some key benefits of using models for query analysis in unstructured data retrieval:
+検索システムは、単純で不明瞭なクエリから複雑で多面的な質問まで、幅広いユーザー入力に対応することが理想的です。  
+この柔軟性を実現するための一般的なアプローチは、生のユーザークエリをより効果的な検索クエリに変換するためにモデルを使用することです。  
+この変換は、単純なキーワード抽出から高度なクエリ拡張や再構築までさまざまです。  
 
-1. **Query Clarification**: Models can rephrase ambiguous or poorly worded queries for clarity.
-2. **Semantic Understanding**: They can capture the intent behind a query, going beyond literal keyword matching.
-3. **Query Expansion**: Models can generate related terms or concepts to broaden the search scope.
-4. **Complex Query Handling**: They can break down multi-part questions into simpler sub-queries.
+非構造化データ検索におけるクエリ分析でモデルを使用する主な利点は以下の通りです：
+1. **Query Clarification**: モデルは曖昧または不明瞭なクエリを明確に書き換えることができます。
+2. **Semantic Understanding**: モデルはクエリの意図を捉え、単純なキーワードの一致を超えた検索を可能にします。
+3. **Query Expansion**: モデルは関連する用語や概念を生成して検索範囲を広げることができます。
+4. **Complex Query Handling**: モデルは、多面的な質問を単純なサブクエリに分解できます。
 
-Various techniques have been developed to leverage models for query re-writing, including:
+クエリの書き換えにモデルを活用するために、さまざまな技術が開発されています。これには以下が含まれます：
 
-| Name                                                                                                      | When to use                                                                                     | Description                                                                                                                                                                                                                                                                            |
+| 名前                                                                                                      | 使用する場面                                                                                    | 説明                                                                                                                                                                                                                                                                            |
 |-----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Multi-query](/docs/how_to/MultiQueryRetriever/)                                                          | When you want to ensure high recall in retrieval by providing multiple phrasings of a question. | Rewrite the user question with multiple phrasings, retrieve documents for each rewritten question, return the unique documents for all queries.                                                                                                                                        |
-| [Decomposition](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb) | When a question can be broken down into smaller subproblems.                                    | Decompose a question into a set of subproblems / questions, which can either be solved sequentially (use the answer from first + retrieval to answer the second) or in parallel (consolidate each answer into final answer).                                                           |
-| [Step-back](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb)     | When a higher-level conceptual understanding is required.                                       | First prompt the LLM to ask a generic step-back question about higher-level concepts or principles, and retrieve relevant facts about them. Use this grounding to help answer the user question. [Paper](https://arxiv.org/pdf/2310.06117).                                            |
-| [HyDE](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb)          | If you have challenges retrieving relevant documents using the raw user inputs.                 | Use an LLM to convert questions into hypothetical documents that answer the question. Use the embedded hypothetical documents to retrieve real documents with the premise that doc-doc similarity search can produce more relevant matches. [Paper](https://arxiv.org/abs/2212.10496). |
+| [Multi-query](/docs/how_to/MultiQueryRetriever/)                                                          | 質問を複数の表現で提示することで検索の高い網羅性を確保したい場合 | ユーザーの質問を複数の表現で書き換え、それぞれの書き換えられた質問でドキュメントを取得し、すべてのクエリに対してユニークなドキュメントを返します。                                                                                                                                        |
+| [Decomposition](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb) | 質問を小さなサブ問題に分解できる場合                                    | 質問を一連のサブ問題やサブ質問に分解します。これらは順次（最初の回答＋検索を使用して次を回答）または並行して（各回答を統合して最終的な回答を生成）解決することができます。                                                           |
+| [Step-back](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb)     | より高レベルな概念的理解が必要な場合                                      | 最初にLLMに対して、より高次の概念や原則についての一般的なステップバック質問を促し、それに関連する事実を取得します。この基盤を使用してユーザーの質問に答える助けとします。 [論文](https://arxiv.org/pdf/2310.06117).                                            |
+| [HyDE](https://github.com/langchain-ai/rag-from-scratch/blob/main/rag_from_scratch_5_to_9.ipynb)          | ユーザーの生の入力を使用して関連ドキュメントを取得するのが困難な場合                 | 質問を仮想的なドキュメントに変換し、仮想ドキュメントを使用して実際のドキュメントを取得します。ドキュメント間の類似性検索により、より関連性の高い一致を生成できるという前提に基づいています。 [論文](https://arxiv.org/abs/2212.10496). |
 
-As an example, query decomposition can simply be accomplished using prompting and a structured output that enforces a list of sub-questions.
-These can then be run sequentially or in parallel on a downstream retrieval system.
+例えば、クエリ分解はプロンプトとサブ質問のリストを強制する構造化出力を使用して簡単に実行できます。  
+これらのサブ質問は、下流の検索システムで順次または並行して実行することができます。
 
 ```python
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 
-# Define a pydantic model to enforce the output structure
+# 出力構造を強制するためのpydanticモデルを定義
 class Questions(BaseModel):
     questions: List[str] = Field(
-        description="A list of sub-questions related to the input query."
+        description="入力クエリに関連するサブ質問のリスト。"
     )
 
-# Create an instance of the model and enforce the output structure
+# モデルのインスタンスを作成し、出力構造を強制
 model = ChatOpenAI(model="gpt-4o", temperature=0) 
 structured_model = model.with_structured_output(Questions)
 
-# Define the system prompt
-system = """You are a helpful assistant that generates multiple sub-questions related to an input question. \n
-The goal is to break down the input into a set of sub-problems / sub-questions that can be answers in isolation. \n"""
+# システムプロンプトを定義
+system = """あなたは、入力された質問に関連する複数のサブ質問を生成する役に立つアシスタントです。\n
+目標は、入力を一連のサブ問題／サブ質問に分解し、それぞれ個別に回答できるようにすることです。\n"""
 
-# Pass the question to the model
-question = """What are the main components of an LLM-powered autonomous agent system?"""
+# 質問をモデルに渡す
+question = ""LLMを活用した自律型エージェントシステムの主要な構成要素は何ですか？"""
 questions = structured_model.invoke([SystemMessage(content=system)]+[HumanMessage(content=question)])
 ```
 
 :::tip
 
-See our RAG from Scratch videos for a few different specific approaches:
+RAG from Scratchの動画で、いくつかの具体的なアプローチを確認できます：
 - [Multi-query](https://youtu.be/JChPi0CRnDY?feature=shared)
 - [Decomposition](https://youtu.be/h0OPWlEOank?feature=shared)
 - [Step-back](https://youtu.be/xn1jEjRyJ2U?feature=shared)
@@ -109,29 +110,29 @@ See our RAG from Scratch videos for a few different specific approaches:
 
 ### Query construction
 
-Query analysis also can focus on translating natural language queries into specialized query languages or filters. 
-This translation is crucial for effectively interacting with various types of databases that house structured or semi-structured data.
+クエリ分析では、自然言語クエリを専門的なクエリ言語やフィルターに変換することにも焦点を当てることができます。  
+この変換は、構造化データや半構造化データを格納するさまざまなタイプのデータベースと効果的にやり取りするために非常に重要です。
 
-1. **Structured Data examples**: For relational and graph databases, Domain-Specific Languages (DSLs) are used to query data.
-   - **Text-to-SQL**: [Converts natural language to SQL](https://paperswithcode.com/task/text-to-sql) for relational databases.
-   - **Text-to-Cypher**: [Converts natural language to Cypher](https://neo4j.com/labs/neodash/2.4/user-guide/extensions/natural-language-queries/) for graph databases.
+1. **Structured Data examples**: リレーショナルデータベースやグラフデータベースでは、ドメイン固有言語（DSL）を使用してデータをクエリします。
+   - **Text-to-SQL**: [自然言語をSQLに変換](https://paperswithcode.com/task/text-to-sql) し、リレーショナルデータベースにクエリを実行します。
+   - **Text-to-Cypher**: [自然言語をCypherに変換](https://neo4j.com/labs/neodash/2.4/user-guide/extensions/natural-language-queries/) し、グラフデータベースにクエリを実行します。
 
-2. **Semi-structured Data examples**: For vectorstores, queries can combine semantic search with metadata filtering.
-   - **Natural Language to Metadata Filters**: Converts user queries into [appropriate metadata filters](https://docs.pinecone.io/guides/data/filter-with-metadata).
+2. **Semi-structured Data examples**: ベクトルストアでは、セマンティック検索とメタデータフィルタリングを組み合わせたクエリが使用されます。
+   - **Natural Language to Metadata Filters**: ユーザークエリを [適切なメタデータフィルター](https://docs.pinecone.io/guides/data/filter-with-metadata)に変換します。
 
-These approaches leverage models to bridge the gap between user intent and the specific query requirements of different data storage systems. Here are some popular techniques:
+これらのアプローチは、ユーザーの意図と異なるデータストレージシステムの特定のクエリ要件とのギャップを埋めるためにモデルを活用します。以下は、一般的な技術の一覧です：
 
 | Name                                     | When to Use                                                                                                                          | Description                                                                                                                                                                                                                                          |
 |------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Self Query](/docs/how_to/self_query/)   | If users are asking questions that are better answered by fetching documents based on metadata rather than similarity with the text. | This uses an LLM to transform user input into two things: (1) a string to look up semantically, (2) a metadata filter to go along with it. This is useful because oftentimes questions are about the METADATA of documents (not the content itself). |
-| [Text to SQL](/docs/tutorials/sql_qa/)   | If users are asking questions that require information housed in a relational database, accessible via SQL.                          | This uses an LLM to transform user input into a SQL query.                                                                                                                                                                                           |
-| [Text-to-Cypher](/docs/tutorials/graph/) | If users are asking questions that require information housed in a graph database, accessible via Cypher.                            | This uses an LLM to transform user input into a Cypher query.                                                                                                                                                                                        |
+| [Self Query](/docs/how_to/self_query/)   | ユーザーが、テキストの類似性ではなくメタデータに基づいてドキュメントを取得する方が適している質問をしている場合 | これは、LLMを使用してユーザー入力を次の2つに変換します：(1) セマンティックに検索する文字列、(2) それに伴うメタデータフィルター。この方法は、質問がドキュメントのコンテンツ自体ではなくメタデータに関するものである場合に役立ちます。 |
+| [Text to SQL](/docs/tutorials/sql_qa/)   | ユーザーが、SQLを介してアクセス可能なリレーショナルデータベースに格納された情報を必要とする質問をしている場合                         | これは、LLMを使用してユーザー入力をSQLクエリに変換します。                                                                                                                                                                                           |
+| [Text-to-Cypher](/docs/tutorials/graph/) | ユーザーが、Cypherを介してアクセス可能なグラフデータベースに格納された情報を必要とする質問をしている場合                            | これは、LLMを使用してユーザー入力をCypherクエリに変換します。                                                                                                                                                                                     |
 
-As an example, here is how to use the `SelfQueryRetriever` to convert natural language queries into metadata filters.  
+以下は、`SelfQueryRetriever`を使用して自然言語クエリをメタデータフィルターに変換する方法の例です。
 
 ```python
 metadata_field_info = schema_for_metadata 
-document_content_description = "Brief summary of a movie"
+document_content_description = "映画の簡潔な要約"
 llm = ChatOpenAI(temperature=0)
 retriever = SelfQueryRetriever.from_llm(
     llm,
@@ -143,90 +144,90 @@ retriever = SelfQueryRetriever.from_llm(
 
 :::info[Further reading]
 
-* See our tutorials on [text-to-SQL](/docs/tutorials/sql_qa/), [text-to-Cypher](/docs/tutorials/graph/), and [query analysis for metadata filters](/docs/tutorials/rag/#query-analysis).
-* See our [blog post overview](https://blog.langchain.dev/query-construction/).
-* See our RAG from Scratch video on [query construction](https://youtu.be/kl6NwWYxvbM?feature=shared).
+* Text-to-SQL、Text-to-Cypher、およびメタデータフィルターのクエリ分析に関するチュートリアルをご覧ください。
+* [クエリ構築に関するブログ記事](https://blog.langchain.dev/query-construction/)をご覧ください。
+* RAG from Scratchの[クエリ構築に関する動画](https://youtu.be/kl6NwWYxvbM?feature=shared)をご覧ください。
 
 ::: 
 
-## Information retrieval 
+## 情報検索
 
-### Common retrieval systems
+### 一般的な検索システム
 
 #### Lexical search indexes
 
-Many search engines are based upon matching words in a query to the words in each document. 
-This approach is called lexical retrieval, using search [algorithms that are typically based upon word frequencies](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2).
-The intution is simple: a word appears frequently both in the user’s query and a particular document, then this document might be a good match.
+多くの検索エンジンは、クエリ内の単語を各ドキュメント内の単語と一致させることに基づいています。このアプローチはレキシカル検索と呼ばれ、[通常は単語頻度に基づいたアルゴリズム](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2)を使用します。  
+直感的な考え方としては、ユーザーのクエリと特定のドキュメントの両方に頻繁に現れる単語があれば、そのドキュメントは適合性が高い可能性があるというものです。 
 
-The particular data structure used to implement this is often an [*inverted index*](https://www.geeksforgeeks.org/inverted-index/).
-This types of index contains a list of words and a mapping of each word to a list of locations at which it occurs in various documents. 
-Using this data structure, it is possible to efficiently match the words in search queries to the documents in which they appear.
-[BM25](https://en.wikipedia.org/wiki/Okapi_BM25#:~:text=BM25%20is%20a%20bag%2Dof,slightly%20different%20components%20and%20parameters.) and [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) are [two popular lexical search algorithms](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2).
+このアプローチを実装するために使用される具体的なデータ構造は、しばしば[反転インデックス](https://www.geeksforgeeks.org/inverted-index/)です。  
+このタイプのインデックスには単語のリストと、各単語がさまざまなドキュメントで現れる位置のリストへのマッピングが含まれます。  
+このデータ構造を使用すると、検索クエリ内の単語をそれが現れるドキュメントに効率的に一致させることが可能になります。  
+[BM25](https://en.wikipedia.org/wiki/Okapi_BM25#:~:text=BM25%20is%20a%20bag%2Dof,slightly%20different%20components%20and%20parameters.)や[TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)は、[人気のあるレキシカル検索アルゴリズム](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2)の例です。
 
 :::info[Further reading]
 
-* See the [BM25](/docs/integrations/retrievers/bm25/) retriever integration.
-* See the [Elasticsearch](/docs/integrations/retrievers/elasticsearch_retriever/) retriever integration.
+* [BM25](/docs/integrations/retrievers/bm25/) レトリーバー統合をご覧ください。
+* [Elasticsearch](/docs/integrations/retrievers/elasticsearch_retriever/) レトリーバー統合をご覧ください。
 
 ::: 
 
 #### Vector indexes
 
-Vector indexes are an alternative way to index and store unstructured data.
-See our conceptual guide on [vectorstores](/docs/concepts/vectorstores/) for a detailed overview.  
-In short, rather than using word frequencies, vectorstores use an [embedding model](/docs/concepts/embedding_models/) to compress documents into high-dimensional vector representation. 
-This allows for efficient similarity search over embedding vectors using simple mathematical operations like cosine similarity.
+ベクトルインデックスは、非構造化データをインデックス化して保存するための代替手段です。  
+詳細な概要については、ベクトルストアに関する概念ガイドをご覧ください。  
+簡単に言えば、単語頻度を使用するのではなく、ベクトルストアは埋め込みモデルを使用して、ドキュメントを高次元のベクトル表現に圧縮します。  
+これにより、コサイン類似度のような単純な数学的操作を使用して埋め込みベクトル間の効率的な類似性検索が可能になります。
 
 :::info[Further reading]
 
-* See our [how-to guide](/docs/how_to/vectorstore_retriever/) for more details on working with vectorstores.
-* See our [list of vectorstore integrations](/docs/integrations/vectorstores/).
-* See Cameron Wolfe's [blog post](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2) on the basics of vector search.
+* ベクトルストアを操作するためのハウツーガイドをご覧ください。
+* ベクトルストア統合の一覧をご覧ください。
+* ベクトル検索の基本に関するCameron Wolfeの [ブログ記事](https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2) をご覧ください。
 
 :::
 
 #### Relational databases
 
-Relational databases are a fundamental type of structured data storage used in many applications. 
-They organize data into tables with predefined schemas, where each table represents an entity or relationship. 
-Data is stored in rows (records) and columns (attributes), allowing for efficient querying and manipulation through SQL (Structured Query Language). 
-Relational databases excel at maintaining data integrity, supporting complex queries, and handling relationships between different data entities.
+リレーショナルデータベースは、多くのアプリケーションで使用される構造化データストレージの基本的なタイプです。  
+これらは、定義済みのスキーマを持つテーブルにデータを編成し、各テーブルがエンティティまたは関係を表します。  
+データは行（レコード）と列（属性）に格納され、SQL（構造化クエリ言語）を通じて効率的にクエリと操作を行うことができます。  
+リレーショナルデータベースは、データの整合性を維持し、複雑なクエリをサポートし、異なるデータエンティティ間の関係を処理するのに優れています。
 
 :::info[Further reading]
 
-* See our [tutorial](/docs/tutorials/sql_qa/) for working with SQL databases.
-* See our [SQL database toolkit](/docs/integrations/tools/sql_database/).
+* SQLデータベースの操作に関するチュートリアルをご覧ください。
+* SQLデータベースツールキットをご覧ください。
 
 :::
 
 #### Graph databases
 
-Graph databases are a specialized type of database designed to store and manage highly interconnected data. 
-Unlike traditional relational databases, graph databases use a flexible structure consisting of nodes (entities), edges (relationships), and properties. 
-This structure allows for efficient representation and querying of complex, interconnected data.
-Graph databases store data in a graph structure, with nodes, edges, and properties.
-They are particularly useful for storing and querying complex relationships between data points, such as social networks, supply-chain management, fraud detection, and recommendation services
+グラフデータベースは、高度に相互接続されたデータを保存および管理するために設計された特殊なデータベースです。  
+従来のリレーショナルデータベースとは異なり、グラフデータベースは、ノード（エンティティ）、エッジ（関係）、プロパティから成る柔軟な構造を使用します。  
+この構造により、複雑で相互接続されたデータの効率的な表現とクエリが可能になります。  
+グラフデータベースは、ノード、エッジ、プロパティで構成されるグラフ構造にデータを格納します。  
+特に、データポイント間の複雑な関係を保存およびクエリするのに有用で、ソーシャルネットワーク、サプライチェーン管理、不正検出、レコメンデーションサービスなどに適しています。
 
 :::info[Further reading]
 
-* See our [tutorial](/docs/tutorials/graph/) for working with graph databases.
-* See our [list of graph database integrations](/docs/integrations/graphs/). 
-* See Neo4j's [starter kit for LangChain](https://neo4j.com/developer-blog/langchain-neo4j-starter-kit/).
+* グラフデータベースの操作に関するチュートリアルをご覧ください。
+* グラフデータベース統合の一覧をご覧ください。
+* Neo4jによる [LangChainスターターキット](https://neo4j.com/developer-blog/langchain-neo4j-starter-kit/)をご覧ください。
 
 :::
 
 ### Retriever  
 
-LangChain provides a unified interface for interacting with various retrieval systems through the [retriever](/docs/concepts/retrievers/) concept. The interface is straightforward:
+LangChainは、retrieverという概念を通じて、さまざまな検索システムとやり取りするための統一されたインターフェースを提供します。このインターフェースはシンプルです：
 
-1. Input: A query (string)
-2. Output: A list of documents (standardized LangChain [Document](https://python.langchain.com/api_reference/core/documents/langchain_core.documents.base.Document.html) objects)
+1. 入力: クエリ（文字列）
+2. 出力: ドキュメントのリスト（標準化されたLangChainの[Document](https://python.langchain.com/api_reference/core/documents/langchain_core.documents.base.Document.html)オブジェクト）
 
-You can create a retriever using any of the retrieval systems mentioned earlier. The query analysis techniques we discussed are particularly useful here, as they enable natural language interfaces for databases that typically require structured query languages.
-For example, you can build a retriever for a SQL database using text-to-SQL conversion. This allows a natural language query (string) to be transformed into a SQL query behind the scenes.
-Regardless of the underlying retrieval system, all retrievers in LangChain share a common interface. You can use them with the simple `invoke` method:
-
+前述の検索システムのいずれかを使用してレトリーバーを作成できます。  
+ここで、クエリ分析の技術が特に役立ちます。これにより、通常は構造化されたクエリ言語を必要とするデータベースに対して、自然言語インターフェースを提供できます。  
+たとえば、SQLデータベース用にテキストからSQLへの変換を利用したレトリーバーを構築できます。これにより、自然言語のクエリ（文字列）が裏でSQLクエリに変換されます。  
+基盤となる検索システムに関係なく、LangChainのすべてのレトリーバーは共通のインターフェースを共有しています。  
+シンプルなinvokeメソッドを使用して操作できます：
 
 ```python
 docs = retriever.invoke(query)
@@ -234,7 +235,7 @@ docs = retriever.invoke(query)
 
 :::info[Further reading]
 
-* See our [conceptual guide on retrievers](/docs/concepts/retrievers/).
-* See our [how-to guide](/docs/how_to/#retrievers) on working with retrievers.
+* レトリーバーに関する概念ガイドをご覧ください。
+* レトリーバーの操作に関するハウツーガイドをご覧ください。
 
 :::
