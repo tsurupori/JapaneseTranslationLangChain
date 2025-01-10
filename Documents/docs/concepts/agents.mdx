@@ -1,25 +1,25 @@
-# Agents
+# エージェント
 
-By themselves, language models can't take actions - they just output text. Agents are systems that take a high-level task and use an LLM as a reasoning engine to decide what actions to take and execute those actions.
+単独では、言語モデルは行動を実行することはできません。ただテキストを出力するだけです。  
+エージェントとは、高度なタスクを受け取り、LLMを推論エンジンとして使用して、どの行動を取るかを決定し、その行動を実行するシステムです。
 
-[LangGraph](/docs/concepts/architecture#langgraph) is an extension of LangChain specifically aimed at creating highly controllable and customizable agents. We recommend that you use LangGraph for building agents.
+[LangGraph](/Documents/docs/concepts/architecture#langgraph) は、LangChainを拡張したもので、高度に制御可能でカスタマイズ可能なエージェントを作成することを目的としています。エージェントを構築する際には、LangGraphの使用をお勧めします。
 
-Please see the following resources for more information:
+詳細については、以下のリソースをご覧ください：
 
-* LangGraph docs on [common agent architectures](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/)
-* [Pre-built agents in LangGraph](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent)
+* LangGraphの[一般的なエージェントアーキテクチャ](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/)に関するドキュメント 
+* [LangGraphのプリビルトエージェント](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent)
 
-## Legacy agent concept: AgentExecutor
+## レガシーエージェントの概念: AgentExecutor
 
-LangChain previously introduced the `AgentExecutor` as a runtime for agents. 
-While it served as an excellent starting point, its limitations became apparent when dealing with more sophisticated and customized agents. 
-As a result, we're gradually phasing out `AgentExecutor` in favor of more flexible solutions in LangGraph.
+LangChainは以前、エージェントのランタイムとして`AgentExecutor`を導入しました。  
+これは優れた出発点となりましたが、より高度でカスタマイズされたエージェントに対応する際の限界が明らかになりました。  
+そのため、現在では`AgentExecutor`を段階的に廃止し、LangGraph内のより柔軟なソリューションに移行しています。
 
-### Transitioning from AgentExecutor to langgraph
+### AgentExecutorからLangGraphへの移行
 
-If you're currently using `AgentExecutor`, don't worry! We've prepared resources to help you:
+現在`AgentExecutor`を使用している場合でも、心配はいりません！以下のリソースをご用意しています：
 
-1. For those who still need to use `AgentExecutor`, we offer a comprehensive guide on [how to use AgentExecutor](/docs/how_to/agent_executor).
+1. `AgentExecutor`を引き続き使用する必要がある場合、[AgentExecutorの使用方法](/Documents/docs/how_to/agent_executor)に関する包括的なガイドを提供しています。
 
-2. However, we strongly recommend transitioning to LangGraph for improved flexibility and control. To facilitate this transition, we've created a detailed [migration guide](/docs/how_to/migrate_agent) to help you move from `AgentExecutor` to LangGraph seamlessly.
-
+2. しかし、より柔軟で制御可能なLangGraphへの移行を強くお勧めします。この移行を容易にするため、`AgentExecutor`からLangGraphにスムーズに移行するための詳細な[移行ガイド](/Documents/docs/how_to/migrate_agent)を作成しました。
