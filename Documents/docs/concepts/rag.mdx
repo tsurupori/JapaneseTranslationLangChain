@@ -2,55 +2,55 @@
 
 :::info[Prerequisites]
 
-* [Retrieval](/docs/concepts/retrieval/)
+* [Retrieval](/Documents/docs/concepts/retrieval/)
 
 :::
 
-## Overview
+## 概要
 
-Retrieval Augmented Generation (RAG) is a powerful technique that enhances [language models](/docs/concepts/chat_models/) by combining them with external knowledge bases. 
-RAG addresses [a key limitation of models](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise): models rely on fixed training datasets, which can lead to outdated or incomplete information.
-When given a query, RAG systems first search a knowledge base for relevant information.
-The system then incorporates this retrieved information into the model's prompt.
-The model uses the provided context to generate a response to the query.
-By bridging the gap between vast language models and dynamic, targeted information retrieval, RAG is a powerful technique for building more capable and reliable AI systems.
+検索拡張生成（RAG）は、外部の知識ベースと組み合わせることで[言語モデル](/Documents/docs/concepts/chat_models/)を強化する強力な手法です。  
+RAGは[モデルの重要な制限](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise)に対処します。これらのモデルは固定されたトレーニングデータセットに依存しているため、情報が古くなったり不完全になったりする可能性があります。  
+クエリが与えられると、RAGシステムは最初に知識ベースを検索して関連情報を探します。  
+次に、システムはこの取得した情報をモデルのプロンプトに組み込みます。  
+モデルは提供されたコンテキストを使用してクエリに対する応答を生成します。  
+膨大な言語モデルと動的で的確な情報検索とのギャップを埋めることで、RAGはより能力が高く信頼性のあるAIシステムを構築するための強力な手法となっています。
 
-## Key concepts
+## 重要な概念
 
-![Conceptual Overview](/img/rag_concepts.png)
+![Conceptual Overview](/static/img/rag_concepts.png)
 
-(1) **Retrieval system**: Retrieve relevant information from a knowledge base.
+(1) **Retrieval system**: 知識ベースから関連情報を取得する。
 
-(2) **Adding external knowledge**: Pass retrieved information to a model.
+(2) **Adding external knowledge**: 取得した情報をモデルに渡す。
 
-## Retrieval system
+## 検索システム
 
-Model's have internal knowledge that is often fixed, or at least not updated frequently due to the high cost of training.
-This limits their ability to answer questions about current events, or to provide specific domain knowledge.
-To address this, there are various knowledge injection techniques like [fine-tuning](https://hamel.dev/blog/posts/fine_tuning_valuable.html) or continued pre-training.
-Both are [costly](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise) and often [poorly suited](https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts) for factual retrieval.
-Using a retrieval system offers several advantages:
+モデルには内部知識がありますが、それは固定されている場合が多く、トレーニングにかかるコストの高さから頻繁に更新されることはありません。  
+このため、モデルは最新の出来事に関する質問に答えたり、特定の分野の知識を提供したりする能力が制限されます。  
+これに対処するために、[ファインチューニング](https://hamel.dev/blog/posts/fine_tuning_valuable.html)や継続的な事前学習のようなさまざまな知識注入技術があります。  
+しかし、これらは[高コスト](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise)であり、事実検索には[適していない](https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts)場合が多いです。  
+検索システムを使用することで、以下のような利点が得られます：  
 
-- **Up-to-date information**: RAG can access and utilize the latest data, keeping responses current.
-- **Domain-specific expertise**: With domain-specific knowledge bases, RAG can provide answers in specific domains.
-- **Reduced hallucination**: Grounding responses in retrieved facts helps minimize false or invented information.
-- **Cost-effective knowledge integration**: RAG offers a more efficient alternative to expensive model fine-tuning.
+- **最新情報の活用**: RAGは最新データにアクセスして利用できるため、応答を最新の状態に保つことができます。
+- **特定分野の専門知識**: 分野ごとの知識ベースを使用することで、RAGは特定の分野に関する回答を提供できます。
+- **幻覚の削減**: 取得した事実に基づいて応答を構築することで、虚偽や捏造された情報を最小限に抑えることができます。
+- **コスト効率の高い知識統合**: RAGは高価なモデルのファインチューニングに代わる、より効率的な方法を提供します。
 
 :::info[Further reading]
 
-See our conceptual guide on [retrieval](/docs/concepts/retrieval/).
+ [retrieval](/Documents/docs/concepts/retrieval/)に関する概念ガイドをご覧ください。
 
 :::
 
-## Adding external knowledge
+## 外部知識の追加
 
-With a retrieval system in place, we need to pass knowledge from this system to the model. 
-A RAG pipeline typically achieves this following these steps:
+検索システムを導入した後、このシステムから得た知識をモデルに渡す必要があります。  
+RAGパイプラインは通常、以下の手順でこれを実現します：
 
-- Receive an input query.
-- Use the retrieval system to search for relevant information based on the query.
-- Incorporate the retrieved information into the prompt sent to the LLM.
-- Generate a response that leverages the retrieved context.
+- 入力クエリを受け取る。
+- クエリに基づいて検索システムを使用し、関連情報を検索する。
+- 取得した情報をLLMに送るプロンプトに組み込む。
+- 取得したコンテキストを活用して応答を生成する。
 
 As an example, here's a simple RAG workflow that passes information from a [retriever](/docs/concepts/retrievers/) to a [chat model](/docs/concepts/chat_models/):
 
@@ -58,41 +58,41 @@ As an example, here's a simple RAG workflow that passes information from a [retr
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 
-# Define a system prompt that tells the model how to use the retrieved context
-system_prompt = """You are an assistant for question-answering tasks. 
-Use the following pieces of retrieved context to answer the question. 
-If you don't know the answer, just say that you don't know. 
-Use three sentences maximum and keep the answer concise.
-Context: {context}:"""
-    
-# Define a question
-question = """What are the main components of an LLM-powered autonomous agent system?"""
+# モデルに取得したコンテキストの使い方を指示するシステムプロンプトを定義
+system_prompt = """あなたは質問応答タスクのためのアシスタントです。
+以下の取得されたコンテキストを使用して質問に答えてください。
+もし答えがわからない場合は、わからないと言ってください。
+最大で3文以内に回答し、簡潔にしてください。
+コンテキスト: {context}:"""
 
-# Retrieve relevant documents
+# 質問を定義
+question = """LLMを活用した自律型エージェントシステムの主要な構成要素は何ですか？"""
+
+# 関連するドキュメントを取得
 docs = retriever.invoke(question)
 
-# Combine the documents into a single string
+# ドキュメントを1つの文字列に結合
 docs_text = "".join(d.page_content for d in docs)
 
-# Populate the system prompt with the retrieved context
+# システムプロンプトに取得したコンテキストを組み込む
 system_prompt_fmt = system_prompt.format(context=docs_text)
 
-# Create a model
+# モデルを作成
 model = ChatOpenAI(model="gpt-4o", temperature=0) 
 
-# Generate a response
+# 応答を生成
 questions = model.invoke([SystemMessage(content=system_prompt_fmt),
                           HumanMessage(content=question)])
 ```
 
 :::info[Further reading]
 
-RAG a deep area with many possible optimization and design choices:
+RAGには多くの最適化や設計の選択肢があり、奥が深い分野です：
 
-* See [this excellent blog](https://cameronrwolfe.substack.com/p/a-practitioners-guide-to-retrieval?utm_source=profile&utm_medium=reader2) from Cameron Wolfe for a comprehensive overview and history of RAG.
-* See our [RAG how-to guides](/docs/how_to/#qa-with-rag).
-* See our RAG [tutorials](/docs/tutorials/).
-* See our RAG from Scratch course, with [code](https://github.com/langchain-ai/rag-from-scratch) and [video playlist](https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x).
-* Also, see our RAG from Scratch course [on Freecodecamp](https://youtu.be/sVcwVQRHIc8?feature=shared).
+* RAGの包括的な概要と歴史については、Cameron Wolfeによる[この優れたブログ](https://cameronrwolfe.substack.com/p/a-practitioners-guide-to-retrieval?utm_source=profile&utm_medium=reader2)をご覧ください。
+* RAGの[ハウツーガイド](/Documents/docs/how_to/#qa-with-rag)をご覧ください。
+* [RAGのチュートリアル](/Documents/docs/tutorials/)をご覧ください。
+* [コード](https://github.com/langchain-ai/rag-from-scratch) と [動画プレイリスト](https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x)付きの「RAG from Scratchコース」をご覧ください。
+* また、[Freecodecamp](https://youtu.be/sVcwVQRHIc8?feature=shared)で提供されている「RAG from Scratchコース」も参照してください。
 
 :::
